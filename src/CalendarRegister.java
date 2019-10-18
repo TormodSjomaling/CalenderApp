@@ -1,5 +1,8 @@
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Represents the register which has handles all actions
@@ -8,7 +11,7 @@ import java.util.HashMap;
  * @author Tormod Lysvold Sjømæling
  */
 public class CalendarRegister {
-    private HashMap<LocalDate, String> listOfEntries;
+    private Map<LocalDate, String> listOfEntries;
 
     /**
      * Constructor for objects of class CalendarRegister
@@ -43,11 +46,32 @@ public class CalendarRegister {
         return false;
     }
 
+    public Map<LocalDate, String> getFromToListOfEntries(LocalDate fromDate, LocalDate toDate) {
+        Map<LocalDate, String> fromToListOfEntries= new HashMap<LocalDate, String>();
+        for (Map.Entry<LocalDate, String> entry : listOfEntries.entrySet()) {
+            if (entry.getKey().isAfter(fromDate) && entry.getKey().isBefore(toDate)) {
+                fromToListOfEntries.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return getListOfEntriesSorted(fromToListOfEntries);
+    }
+
+    private Map<LocalDate, String> getListOfEntriesSorted(Map<LocalDate, String> fromToListOfEntries) {
+        Map<LocalDate, String> treeMap =new TreeMap<LocalDate, String>(fromToListOfEntries);
+
+        for (Map.Entry<LocalDate, String> entry: treeMap.entrySet()) {
+            treeMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return treeMap;
+    }
+
     /**
      * Returns the list of calendar entries
      * @return the list of calendar entries
      */
-    public HashMap<LocalDate, String> getAllCalendarEntries() {
+    public Map<LocalDate, String> getAllCalendarEntries() {
         return listOfEntries;
     }
 }

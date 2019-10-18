@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -60,6 +61,7 @@ public class Application {
                         break;
 
                     case 3:
+                        listAllCalendarEntriesSorted();
                         break;
 
                     case 4:
@@ -87,7 +89,7 @@ public class Application {
      * Displays the menu to the user, and waits for the users input. The user is
      * expected to input an integer between 1 and the max number of menu items.
      * If the user inputs anything else, an InputMismatchException is thrown.
-     * The method returns the valid input from the user.
+     * Returns the valid input from the user.
      *
      * @return the menu number (between 1 and max menu item number) provided by the user.
      * @throws InputMismatchException if user enters an invalid number/menu choice
@@ -179,11 +181,39 @@ public class Application {
         }
     }
 
+
+    private void listAllCalendarEntriesSorted() {
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            try {
+                System.out.println("Find entries from date: (YYYY-MM-DD) ");
+                String fromDate = scanner.nextLine().trim();
+                if (fromDate.equals("")) {
+                    System.out.println("Please enter date on requested format.");
+                }
+                else {
+                    System.out.println("Find entries to date: (YYYY-MM-DD) ");
+                    String toDate = scanner.nextLine().trim();
+
+                    LocalDate parsedFromDate = LocalDate.parse(fromDate);
+                    LocalDate parsedToDate = LocalDate.parse(toDate);
+
+                    Map foundEntries = calendarRegister.getFromToListOfEntries(parsedFromDate, parsedToDate);
+                    System.out.println(foundEntries);
+                }
+            } catch (Exception e) {
+                System.out.println("Something went wrong, make sure you enter information on requested format.");
+                System.out.println(e);
+            }
+        }
+    }
+
     /**
      * Lists all entries in the register
      */
     private void listAllCalendarEntries() {
-        HashMap foundEntries = calendarRegister.getAllCalendarEntries();
+        Map foundEntries = calendarRegister.getAllCalendarEntries();
+
         System.out.println("Here are all the entries we found in the calender: ");
         System.out.println(foundEntries);
     }
