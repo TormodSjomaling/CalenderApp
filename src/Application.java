@@ -1,5 +1,5 @@
 import java.time.LocalDate;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -7,13 +7,17 @@ import java.util.Scanner;
  * Makes up the user interface (text based) of the application.
  * Responsible for all user interaction, like displaying the menu
  * and receiving input from the user.
+ *
+ * @author Tormod Lysvold Sjømæling
  */
 public class Application {
 
+    private CalendarRegister calendarRegister;
     /**
      * Constructor for objects of class ApplicationUI
      */
     public Application() {
+        calendarRegister = new CalendarRegister();
     }
 
     private String[] menuItems = {
@@ -24,7 +28,7 @@ public class Application {
     };
 
     /**
-     * Initializes the application.
+     * Initializes the application
      */
     private void init() {
         System.out.println("init() was called");
@@ -32,7 +36,7 @@ public class Application {
 
     /**
      * Starts the application by showing the menu and retrieving input from the
-     * user.
+     * user
      */
     public void start()
     {
@@ -48,18 +52,18 @@ public class Application {
                 switch (menuSelection)
                 {
                     case 1:
-                        addCalenderEntry();
+                        addCalendarEntry();
                         break;
 
                     case 2:
-                        deleteCalenderEntry();
+                        deleteCalendarEntry();
                         break;
 
                     case 3:
                         break;
 
                     case 4:
-                        //listAllCalenderEntries();
+                        listAllCalendarEntries();
                         break;
 
                     case 5:
@@ -111,11 +115,10 @@ public class Application {
     }
 
     /**
-     * //TODO update these comments
-     * Adds new object of type Calender  to
-     * the Application Register
+     * Creates a new object of type CalenderEntry and
+     * adds it to the Calender Register
      */
-    private void addCalenderEntry() {
+    private void addCalendarEntry() {
         Scanner reader = new Scanner(System.in);
 
         System.out.println("\nPlease enter the following information: ");
@@ -131,7 +134,9 @@ public class Application {
                     System.out.println("What is happening at this date?: ");
                     String eventInput = reader.nextLine().trim().toLowerCase();
                     LocalDate date = LocalDate.parse(dateInput);
-                    //Pass parameters in calender object
+
+                    CalendarEntry calendarEntry = new CalendarEntry(date, eventInput);
+                    calendarRegister.addCalendarEntry(calendarEntry);
                     break;
                 }
             } catch (Exception e) {
@@ -141,7 +146,10 @@ public class Application {
         }
     }
 
-    private void deleteCalenderEntry() {
+    /**
+     * Deletes a calender entry from the register.
+     */
+    private void deleteCalendarEntry() {
         Scanner reader = new Scanner(System.in);
 
         while (true) {
@@ -155,7 +163,13 @@ public class Application {
                 }
                 else {
                     LocalDate date = LocalDate.parse(dateInput);
-                    //Pass parameters in calender object
+                    boolean deleted = calendarRegister.deleteCalendarEntry(date);
+                    if (deleted == true) {
+                        System.out.println("Entry deleted successfully!");
+                    }
+                    else {
+                        System.out.println("Entry was not found...");
+                    }
                     break;
                 }
             } catch (Exception e) {
@@ -166,12 +180,11 @@ public class Application {
     }
 
     /**
-    private void listAllCalenderEntries() {
-        //Iterator<Calendar> foundEntries = applicationRegister.getAllEntires();
-        if (foundEntries.hasNext()) {
-            while (foundEntries.hasNext()) {
-
-            }
-        }
-    }**/
+     * Lists all entries in the register
+     */
+    private void listAllCalendarEntries() {
+        HashMap foundEntries = calendarRegister.getAllCalendarEntries();
+        System.out.println("Here are all the entries we found in the calender: ");
+        System.out.println(foundEntries);
+    }
 }
