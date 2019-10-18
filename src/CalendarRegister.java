@@ -22,6 +22,7 @@ public class CalendarRegister {
 
     /**
      * Adds a calenderEntry to the register
+     *
      * @param calendarEntry contrains the date and event
      */
     public void addCalendarEntry(CalendarEntry calendarEntry) {
@@ -33,6 +34,7 @@ public class CalendarRegister {
 
     /**
      * Deletes a calenderEntry from the register
+     *
      * @param date LocalDate that user entered
      * @return true if entry got deleted from hashmap, else false
      */
@@ -46,17 +48,32 @@ public class CalendarRegister {
         return false;
     }
 
+    /**
+     * Puts key value pairs which is between our parameters, fromDate and toDate into a new HashMap
+     *
+     * @param fromDate LocalDate input from user
+     * @param toDate LocalDate input from user
+     * @return HashMap being sent to getListOfEntriesSorted()
+     */
     public Map<LocalDate, String> getFromToListOfEntries(LocalDate fromDate, LocalDate toDate) {
         Map<LocalDate, String> fromToListOfEntries= new HashMap<LocalDate, String>();
+
         for (Map.Entry<LocalDate, String> entry : listOfEntries.entrySet()) {
-            if (entry.getKey().isAfter(fromDate) && entry.getKey().isBefore(toDate)) {
-                fromToListOfEntries.put(entry.getKey(), entry.getValue());
+                if (entry.getKey().isAfter(fromDate) && entry.getKey().isBefore(toDate)) {
+                    fromToListOfEntries.put(entry.getKey(), entry.getValue());
             }
         }
+        System.out.println("getFromTo" + fromToListOfEntries);
 
         return getListOfEntriesSorted(fromToListOfEntries);
     }
 
+    /**
+     * Sorts the HashMap and putting them in a TreeMap
+     *
+     * @param fromToListOfEntries Unsorted HashMap sent from getFromToListOfEntries()
+     * @return returns sorted TreeMap to Application.java
+     */
     private Map<LocalDate, String> getListOfEntriesSorted(Map<LocalDate, String> fromToListOfEntries) {
         Map<LocalDate, String> treeMap =new TreeMap<LocalDate, String>(fromToListOfEntries);
 

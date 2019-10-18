@@ -182,24 +182,35 @@ public class Application {
     }
 
 
+    /**
+     * Lists the sorted (on date) HashMap between the
+     * users LocalDate input, fromDate, toDate
+     */
     private void listAllCalendarEntriesSorted() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
             try {
-                System.out.println("Find entries from date: (YYYY-MM-DD) ");
+                System.out.println("Find entries from (date): (YYYY-MM-DD) ");
                 String fromDate = scanner.nextLine().trim();
                 if (fromDate.equals("")) {
                     System.out.println("Please enter date on requested format.");
                 }
                 else {
-                    System.out.println("Find entries to date: (YYYY-MM-DD) ");
+                    System.out.println("Find entries to (date): (YYYY-MM-DD) ");
                     String toDate = scanner.nextLine().trim();
 
                     LocalDate parsedFromDate = LocalDate.parse(fromDate);
                     LocalDate parsedToDate = LocalDate.parse(toDate);
 
-                    Map foundEntries = calendarRegister.getFromToListOfEntries(parsedFromDate, parsedToDate);
-                    System.out.println(foundEntries);
+                    if (parsedFromDate.isAfter(parsedToDate)){
+                        System.out.println("\n" + parsedFromDate + " cannot be after " + parsedToDate + ".");
+                        System.out.println("Please try again.\n");
+                    }
+                    else {
+                        Map foundEntries = calendarRegister.getFromToListOfEntries(parsedFromDate, parsedToDate);
+                        System.out.println(foundEntries);
+                        break;
+                    }
                 }
             } catch (Exception e) {
                 System.out.println("Something went wrong, make sure you enter information on requested format.");
