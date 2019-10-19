@@ -118,7 +118,7 @@ public class Application {
 
     /**
      * Creates a new object of type CalenderEntry and
-     * adds it to the Calender Register
+     * adds it to the Calender Register (file, Entries.txt)
      */
     private void addCalendarEntry() {
         Scanner reader = new Scanner(System.in);
@@ -134,7 +134,7 @@ public class Application {
                 }
                 else {
                     System.out.println("What is happening at this date?: ");
-                    String eventInput = reader.nextLine().trim().toLowerCase();
+                    String eventInput = reader.nextLine().trim();
                     LocalDate date = LocalDate.parse(dateInput);
 
                     CalendarEntry calendarEntry = new CalendarEntry(date, eventInput);
@@ -207,8 +207,17 @@ public class Application {
                         System.out.println("Please try again.\n");
                     }
                     else {
-                        Map foundEntries = calendarRegister.getFromToListOfEntries(parsedFromDate, parsedToDate);
-                        System.out.println(foundEntries);
+                        Map<LocalDate, String> foundEntries = calendarRegister.getFromToListOfEntries(parsedFromDate, parsedToDate);
+
+                        if (!foundEntries.isEmpty()) {
+                            System.out.println("\nHere are all the entries we found in the calender: ");
+                            for (Map.Entry<LocalDate, String> m : foundEntries.entrySet()) {
+                                System.out.println(m.getKey() + ": " + m.getValue());
+                            }
+                        }
+                        else {
+                            System.out.println("We found no entries between " + parsedFromDate + " and " + parsedToDate + ".");
+                        }
                         break;
                     }
                 }
@@ -220,12 +229,19 @@ public class Application {
     }
 
     /**
-     * Lists all entries in the register
+     * Lists all entries in the register (file, Entries.txt)
      */
     private void listAllCalendarEntries() {
-        Map foundEntries = calendarRegister.getAllCalendarEntries();
+        Map<LocalDate, String> foundEntries = calendarRegister.getAllCalendarEntries();
 
-        System.out.println("Here are all the entries we found in the calender: ");
-        System.out.println(foundEntries);
+        if (!foundEntries.isEmpty()) {
+            System.out.println("\nHere are all the entries we found in the calender: ");
+            for (Map.Entry<LocalDate, String> m : foundEntries.entrySet()) {
+                System.out.println(m.getKey() + ": " + m.getValue());
+            }
+        }
+        else {
+            System.out.println("We found no entries...");
+        }
     }
 }

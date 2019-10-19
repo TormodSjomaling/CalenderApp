@@ -1,7 +1,8 @@
+import java.io.*;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 /**
@@ -30,15 +31,32 @@ public class CalendarRegister {
         String event = calendarEntry.getEvent();
 
         listOfEntries.put(date, event);
+        appendToFile(listOfEntries);
+    }
+
+    private void appendToFile(Map<LocalDate, String> toAdd) {
+        try {
+            File file = new File("Entries.txt");
+            FileOutputStream fos = new FileOutputStream(file);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+            oos.writeObject(toAdd);
+            oos.flush();
+            oos.close();
+            fos.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     /**
      * Deletes a calenderEntry from the register
      *
      * @param date LocalDate that user entered
-     * @return true if entry got deleted from hashmap, else false
+     * @return true if entry got deleted from HashMap, else false
      */
-    public boolean deleteCalendarEntry(LocalDate date) {
+    public boolean deleteCalendarEntryd(LocalDate date) {
         if (listOfEntries.containsKey(date)) {
             listOfEntries.remove(date);
 
@@ -49,13 +67,36 @@ public class CalendarRegister {
     }
 
     /**
+     * Deletes a calenderEntry from the register
+     *
+     * @param toDelete LocalDate that user entered
+     * @return true if entry got deleted from HashMap, else false
+     */
+    public boolean deleteCalendarEntry(LocalDate toDelete) {
+        try {
+            Map<LocalDate, String> foundEntries = getAllCalendarEntries();
+            if (foundEntries.containsKey(toDelete)) {
+                foundEntries.remove(toDelete);
+
+                appendToFile(foundEntries);
+
+                return true;
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    /**
      * Puts key value pairs which is between our parameters, fromDate and toDate into a new HashMap
      *
      * @param fromDate LocalDate input from user
      * @param toDate LocalDate input from user
      * @return HashMap being sent to getListOfEntriesSorted()
      */
-    public Map<LocalDate, String> getFromToListOfEntries(LocalDate fromDate, LocalDate toDate) {
+    public Map<LocalDate, String> getFromToListOfEntriesd(LocalDate fromDate, LocalDate toDate) {
         Map<LocalDate, String> fromToListOfEntries= new HashMap<LocalDate, String>();
 
         for (Map.Entry<LocalDate, String> entry : listOfEntries.entrySet()) {
@@ -69,13 +110,50 @@ public class CalendarRegister {
     }
 
     /**
+     * Puts key value pairs which is between our parameters,
+     * fromDate and toDate into a new HashMap which gets sent for sorting.
+     *
+     * @param fromDate LocalDate input from user
+     * @param toDate LocalDate input from user
+     * @return HashMap being sent to getListOfEntriesSorted()
+     */
+    public Map<LocalDate, String> getFromToListOfEntries(LocalDate fromDate, LocalDate toDate) {
+        Map<LocalDate, String> foundEntries = getAllCalendarEntries();
+        Map<LocalDate, String> fromToListOfEntries= new HashMap<LocalDate, String>();
+
+        for (Map.Entry<LocalDate, String> entry : foundEntries.entrySet()) {
+            if (entry.getKey().isAfter(fromDate) && entry.getKey().isBefore(toDate)) {
+                fromToListOfEntries.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        return getListOfEntriesSorted(fromToListOfEntries);
+    }
+
+    /**
      * Sorts the HashMap and putting them in a TreeMap
      *
-     * @param fromToListOfEntries Unsorted HashMap sent from getFromToListOfEntries()
+     * @param foundEntries Unsorted HashMap sent from getFromToListOfEntries()
      * @return returns sorted TreeMap to Application.java
      */
-    private Map<LocalDate, String> getListOfEntriesSorted(Map<LocalDate, String> fromToListOfEntries) {
-        Map<LocalDate, String> treeMap =new TreeMap<LocalDate, String>(fromToListOfEntries);
+    private Map<LocalDate, String> getListOfEntriesSortedd(Map<LocalDate, String> foundEntries) {
+        Map<LocalDate, String> treeMap =new TreeMap<LocalDate, String>(foundEntries);
+
+        for (Map.Entry<LocalDate, String> entry: treeMap.entrySet()) {
+            treeMap.put(entry.getKey(), entry.getValue());
+        }
+
+        return treeMap;
+    }
+
+    /**
+     * Sorts the HashMap and put them in a TreeMap
+     *
+     * @param foundEntries Unsorted HashMap sent from getFromToListOfEntries()
+     * @return returns sorted TreeMap to Application.java
+     */
+    private Map<LocalDate, String> getListOfEntriesSorted(Map<LocalDate, String> foundEntries) {
+        Map<LocalDate, String> treeMap =new TreeMap<LocalDate, String>(foundEntries);
 
         for (Map.Entry<LocalDate, String> entry: treeMap.entrySet()) {
             treeMap.put(entry.getKey(), entry.getValue());
@@ -88,7 +166,31 @@ public class CalendarRegister {
      * Returns the list of calendar entries
      * @return the list of calendar entries
      */
-    public Map<LocalDate, String> getAllCalendarEntries() {
+    public Map<LocalDate, String> getAllCalendarEntriesd() {
         return listOfEntries;
+    }
+
+    /**
+     * Checks our register (file, Entries.txt) for entries and
+     * appends them into mapInFile (HashMap).
+     * @return returns a HashMap to Application.java
+     */
+    public Map<LocalDate, String> getAllCalendarEntries(){
+        try{
+            File file = new File("Entries.txt");
+
+            FileInputStream fis=new FileInputStream(file);
+            ObjectInputStream ois=new ObjectInputStream(fis);
+
+            HashMap<LocalDate, String> mapInFile= (HashMap<LocalDate, String>)ois.readObject();
+
+            ois.close();
+            fis.close();
+
+            return mapInFile;
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        return null;
     }
 }
