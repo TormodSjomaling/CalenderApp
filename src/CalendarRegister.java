@@ -1,8 +1,7 @@
 import java.io.*;
-import java.time.LocalDate;
 import java.util.HashMap;
+import java.time.LocalDate;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.TreeMap;
 
 /**

@@ -27,6 +27,10 @@ public class CalendarEntry {
         return date;
     }
 
+    /**
+     * Sets the date of the CalendarEntry
+     * @param date LocalDate
+     */
     public void setDate(LocalDate date) {
         this.date = date;
     }
@@ -40,10 +44,11 @@ public class CalendarEntry {
     }
 
     /**
-     * Sets the event of the
-     * @param event
+     * Sets the event of the CalendarEntry
+     * @param event String
      */
     public void setEvent(String event) {
         this.event = event;
     }
+
 }
