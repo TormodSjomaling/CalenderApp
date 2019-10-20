@@ -20,7 +20,7 @@ public class CalendarEntry {
     }
 
     /**
-     * Returns the date
+     * Returns the date.
      * @return the date
      */
     public LocalDate getDate() {
@@ -50,5 +50,4 @@ public class CalendarEntry {
     public void setEvent(String event) {
         this.event = event;
     }
-
 }
